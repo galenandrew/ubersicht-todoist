@@ -35,6 +35,8 @@ update: (rawoutput, domEl) ->
 		@renderList obj, container
 
 renderList: (obj, container) ->
+	listHtml = ''
+
 	# switch list type for header
 	if obj.type is 'overdue'
 		listName = 'Overdue'
@@ -45,12 +47,17 @@ renderList: (obj, container) ->
 			when 'tomorrow' then listName = 'Tomorrow'
 			else listName = 'Items'
 
-	container.append "<h2 class='todoist-list-name'>#{listName}</h2>"
-	container.append "<ul class='todoist-list'>"
-	# iterate over list items
-	for item in obj.data
-		container.append "<li class='todoist-item #{item.priority}'>#{item.content}</li>"
-	container.append "</ul>"
+	listHtml += "<h2 class='todoist-list-name'>#{listName}</h2>"
+	unless obj.data.length
+		listHtml += "<p class='todoist-list none'><i class='todoist-item'>No items</i></p>"
+	else
+		listHtml += "<ul class='todoist-list'>"
+		# iterate over list items
+		for item in obj.data
+			listHtml += "<li class='todoist-item priority-#{item.priority}'>#{item.content}</li>"
+		listHtml += "</ul>"
+
+	container.append listHtml
 
 style: """
 	left: 10px
@@ -67,6 +74,28 @@ style: """
 	h2
 		font-size: 18px
 		font-weight: 100
+
+	.todoist-list-name
+		margin-bottom: 5px
+
+	.todoist-list
+		margin-top: 5px
+
+		&.none
+			opacity: 0.2
+
+	.todoist-item
+		&.priority-4
+			font-weight: 900
+		&.priority-3
+			font-weight: 400
+			opacity: 0.8
+		&.priority-2
+			font-weight: 200
+			opacity: 0.7
+		&.priority-1
+			font-weight: 150
+			opacity: 0.6
 
 	.debug
 		display: none
