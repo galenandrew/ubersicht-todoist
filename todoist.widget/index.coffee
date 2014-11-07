@@ -4,6 +4,7 @@ queries = ["overdue","yesterday","today","tomorrow"]
 
 # Local/Instance Variables
 widgetName: 'Todo List'
+showDebug: false
 
 # https://api.todoist.com/API/query?queries=["2014-4-29","overdue","p1","p2"]&token=270c632f7f192dcd58cbd3b8a20b86652bd08a9a
 rawcommand: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
@@ -14,7 +15,7 @@ refreshFrequency: 1000 * 60 * 5 # refreshs every 5 minutes
 
 render: () -> """
 	<div class='todoist-widget'>
-		<pre class="debug rawoutput"></pre>
+		<pre class="debug"></pre>
 		<h1 class='todoist-name'>#{@widgetName}</h1>
 		<div class='todoist-wrapper'></div>
 	</div>
@@ -27,9 +28,12 @@ update: (rawoutput, domEl) ->
 	# grab dom elements
 	container = $(domEl).find '.todoist-wrapper'
 		.empty()
-	raw = $(domEl).find '.rawoutput'
+	debug = $(domEl).find '.debug'
 		.empty()
-	raw.append rawoutput
+		.hide()
+	unless @showDebug is false
+		debug.append rawoutput
+		debug.show()
 
 	for obj in output
 		@renderList obj, container
@@ -60,7 +64,9 @@ renderList: (obj, container) ->
 	container.append listHtml
 
 style: """
-	left: 10px
+.todoist-widget
+	margin-left: 10px
+	width: 500px
 	color: #ffffff
 	font-family: Helvetica Neue
 	text-shadow: 0 0 1px rgba(#000, 0.5)
@@ -98,5 +104,9 @@ style: """
 			opacity: 0.6
 
 	.debug
-		display: none
+		font-size: 10px
+		word-wrap: break-word
+		position: absolute
+		width: 750px
+		left: 520px
 """
