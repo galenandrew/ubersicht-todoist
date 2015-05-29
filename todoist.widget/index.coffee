@@ -5,13 +5,11 @@ queries = ["overdue","yesterday","today","tomorrow"]
 # Local/Instance Variables
 widgetName: 'Todo List'
 showDebug: false
-
-# https://api.todoist.com/API/query?queries=["2014-4-29","overdue","p1","p2"]&token=270c632f7f192dcd58cbd3b8a20b86652bd08a9a
-rawcommand: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
-
-command: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
-
 refreshFrequency: 1000 * 60 * 5 # refreshs every 5 minutes
+
+# https://api.todoist.com/API/query?queries=["2014-4-29","overdue","p1","p2"]&token=API_TOKEN
+rawcommand: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
+command:    "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
 
 render: () -> """
 	<div class='todoist-widget'>
@@ -23,7 +21,10 @@ render: () -> """
 
 update: (rawoutput, domEl) ->
 	# convert output to JSON
-	output = JSON.parse rawoutput
+	try
+		output = JSON.parse rawoutput
+	catch
+		return
 
 	# grab dom elements
 	container = $(domEl).find '.todoist-wrapper'
