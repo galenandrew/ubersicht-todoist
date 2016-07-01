@@ -8,8 +8,8 @@ showDebug: false
 refreshFrequency: 1000 * 60 * 5 # refreshs every 5 minutes
 
 # https://api.todoist.com/API/query?queries=["2014-4-29","overdue","p1","p2"]&token=API_TOKEN
-rawcommand: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
-command:    "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify @queries}&token=#{@token}'"
+rawcommand: "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify queries}&token=#{token}'"
+command:    "curl -s 'https://api.todoist.com/API/query?queries=#{encodeURI JSON.stringify queries}&token=#{token}'"
 
 render: () -> """
 	<div class='todoist-widget'>
